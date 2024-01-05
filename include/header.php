@@ -11,5 +11,4 @@ else {
 }
 ?>
 
-<a href="index.php">Home</a>
 </nav>

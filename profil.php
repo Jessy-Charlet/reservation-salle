@@ -68,71 +68,71 @@ elseif (isset($_POST['update_password'])) {
 <!-------------------------------------------------------------->
 
 <body>
-<body>
     <?php
     include "./include/header.php";
     ?>
-
-    <section>
-        <h1>Mon profil</h1>
-        <?php
-        // Requête SQL 
-        $sql = "SELECT  login AS 'Identifiant', password AS 'Mot de passe'
+    <main>
+        <section>
+            <h1>Mon profil</h1>
+            <?php
+            // Requête SQL 
+            $sql = "SELECT  login AS 'Identifiant', password AS 'Mot de passe'
     FROM utilisateurs WHERE id='" . $_SESSION['id'] . "'";
-        $sql_resultat = $sql_connexion->query($sql);
-        //-------------------------------------------------------------------------------
-        echo "<span class='info'>Identifiant : " . $_SESSION['login'] . "</span>";
-        if ($error == true) {
-            echo $error_message;
-        } elseif ($validation == true) {
-            echo $validation_message;
-        }
-        ?>
-        <div class="modif">
-            <span>Modifier mes informations</span>
-            <div class="modif_int">
-                <form method='post' action='profil.php'>
-                    <label for='login'>Identifiant</label>
-                    <input type='text' name='login' id='login' value='<?= $_SESSION['login'] ?>'
-                        placeholder='Identifiant' required>
-                    <button type='submit' name='update_login'>Ok</button>
-                </form>
+            $sql_resultat = $sql_connexion->query($sql);
+            //-------------------------------------------------------------------------------
+            echo "<span class='info'>Identifiant : " . $_SESSION['login'] . "</span>";
+            if ($error == true) {
+                echo $error_message;
+            } elseif ($validation == true) {
+                echo $validation_message;
+            }
+            ?>
+            <div class="modif">
+                <span>Modifier mes informations</span>
+                <div class="modif_int">
+                    <form method='post' action='profil.php'>
+                        <label for='login'>Identifiant</label>
+                        <input type='text' name='login' id='login' value='<?= $_SESSION['login'] ?>'
+                            placeholder='Identifiant' required>
+                        <button type='submit' name='update_login'>Ok</button>
+                    </form>
 
-                <form method='post' action='profil.php'>
-                    <label for='mdp'>Mot de passe</label>
-                    <div>
-                        <input type='password' name='password' id='mdp' placeholder='Mot de passe' required>
-                        <input type='password' name='confirm_password' placeholder='Confirmation du mot de passe'
-                            required>
-                    </div>
-                    <button type='submit' name='update_password'>Ok</button>
-                </form>
+                    <form method='post' action='profil.php'>
+                        <label for='mdp'>Mot de passe</label>
+                        <div>
+                            <input type='password' name='password' id='mdp' placeholder='Mot de passe' required>
+                            <input type='password' name='confirm_password' placeholder='Confirmation du mot de passe'
+                                required>
+                        </div>
+                        <button type='submit' name='update_password'>Ok</button>
+                    </form>
+                </div>
             </div>
-        </div>
-        <form method='post' action='profil.php'>
-            <button class="deconnexion" type='submit' name='deco'>Déconnexion</button>
-        </form>
-        <a href="reservation-form.php">Faire une réservation</a>
-        <h2>Mes réservations</h2>
-        <!--Affichage des réservations---------------------------------------------------------------------->
-        <?php
-        // Requête SQL
-        $sql = "SELECT titre, debut, fin, description
+            <form method='post' action='profil.php'>
+                <button class="deconnexion" type='submit' name='deco'>Déconnexion</button>
+            </form>
+            <a href="reservation-form.php">Faire une réservation</a>
+            <h2>Mes réservations</h2>
+            <!--Affichage des réservations---------------------------------------------------------------------->
+            <?php
+            // Requête SQL
+            $sql = "SELECT titre, debut, fin, description
     FROM reservations WHERE id_utilisateur='" . $_SESSION['id'] . "'";
-        $sql_resultat = $sql_connexion->query($sql);
-        //-------------------------------------------------------------------------------
-        while ($row = mysqli_fetch_array($sql_resultat, MYSQLI_ASSOC)) {
-            echo $row["titre"]."<br>";
-            echo $row["description"]."<br>";
-            echo "<span>Le : <span>".substr($row["debut"],8,-9)."/".substr($row["debut"],5,-12)."/".substr($row["debut"],0,4)."</span></span><br>";
-            echo "<span>De ".substr($row["debut"],11)." à ".substr($row["fin"],11)."</span>";
-        }
-        ?>
+            $sql_resultat = $sql_connexion->query($sql);
+            //-------------------------------------------------------------------------------
+            while ($row = mysqli_fetch_array($sql_resultat, MYSQLI_ASSOC)) {
+                echo $row["titre"] . "<br>";
+                echo $row["description"] . "<br>";
+                echo "<span>Le : <span>" . substr($row["debut"], 8, -9) . "/" . substr($row["debut"], 5, -12) . "/" . substr($row["debut"], 0, 4) . "</span></span><br>";
+                echo "<span>De " . substr($row["debut"], 11) . " à " . substr($row["fin"], 11) . "</span>";
+            }
+            ?>
 
 
 
 
-    </section>
+        </section>
+    </main>
     <?php
     include "./include/footer.php";
     ?>

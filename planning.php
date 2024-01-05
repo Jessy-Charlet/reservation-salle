@@ -65,7 +65,6 @@ $mois = array(
         include "./include/header.php";
         ?>
         <main>
-            <a href="reservation-form.php">Réserver un créneau</a>
             <h1>
                 Réservations du
                 <?= $today->format('d M') ?> au
@@ -73,6 +72,7 @@ $mois = array(
                 echo $lastday->format('d M');
                 ?>
             </h1>
+            <a href="reservation-form.php" class="btn_resa">Réserver un créneau</a>
             <?php
             $m = intval($today->format('m'));
             $y = intval($today->format('Y'));
@@ -84,7 +84,8 @@ $mois = array(
 
 
             // Requête SQL (selectionne toutes les infos de la table réservations)
-            $sql = "SELECT * FROM reservations";
+            $sql = "SELECT * FROM reservations
+            INNER JOIN utilisateurs ON reservations.id_utilisateur = utilisateurs.id";
             // Exécution de la requête SQL
             $sql_resultat = $sql_connexion->query($sql);
             // Les jours de la semaine
@@ -110,23 +111,22 @@ $mois = array(
                 for ($h = 9; $h < 19; $h++) {
                     if ($today->format('D') == "Sat" or $today->format('D') == "Sun") {
                         echo "<div class='planweekend planc'></div>";
-                    }
-                    else {
-                        $verif=0;
+                    } else {
+                        $verif = 0;
                         foreach ($sql_resultat as $resa) {
                             $plannig_verif = false;
                             $heure = $h . ":00:00";
                             $resadate = explode(" ", $resa['debut']);
                             if ($resadate[0] == $today->format('Y-m-d') and $resadate[1] == $heure) {
-                                echo "<div class='planresa planc'>" . $resa['titre'] . "</div>";
-                                $verif=1;
+                                echo "<a href='reservation.php?titre=".$resa['titre']."&debut=".$resa['debut']."&fin=".$resa['fin']."&login=".$resa['login']."&description=".$resa['description']."' class='linkplan'><div class='planresa planc'><h2>" . $resa['titre'] . "</h2>
+                                <span>" . $resa['login'] . "</span></div></a>";
+                                $verif = 1;
                                 break;
-                            }
-                            else{
+                            } else {
 
                             }
                         }
-                        if ($verif==0) {
+                        if ($verif == 0) {
                             echo "<div class='planvide planc'>Disponible</div>";
                         }
                     }
