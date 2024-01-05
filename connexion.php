@@ -1,0 +1,96 @@
+<?php
+session_start();
+include "./include/sql.php";
+// Si connecté -> envoie sur profil
+if (isset($_SESSION['connexion'])) {
+    if (($_SESSION['connexion'] == true)) {
+        header("Location: ./profil.php");
+    }
+}
+// Initialisation des variables
+if (empty($_SESSION['login'])) {
+    $_SESSION['login'] = "";
+}
+if (empty($_SESSION['password'])) {
+    $_SESSION['password'] = "";
+}
+$error = false;
+
+//--Connexion-----------------------------------------------------------
+if (isset($_POST['connexion'])) {
+    // Requête SQL 
+    $sql = "SELECT * FROM utilisateurs";
+    // Exécution de la requête
+    $sql_resultat = $sql_connexion->query($sql);
+    // Connexion et attribution des session
+    foreach ($sql_resultat as $utilisateur) {
+        if ($utilisateur['login'] == $_POST['login'] and $utilisateur['password'] == $_POST['password']) {
+            $id = $utilisateur['id'];
+            $login = $utilisateur['login'];
+            $password = $utilisateur['password'];
+            $_SESSION['connexion'] = true;
+            $_SESSION['id'] = $id;
+            $_SESSION['login'] = $login;
+            $_SESSION['password'] = $password;
+            header("Location: ./profil.php");
+        }
+        // Mot de passe incorrect
+        else {
+            $error = true;
+            $error_message = "<span class='error'>Identifiant ou mot de passe incorrect</span>";
+        }
+    }
+}
+?>
+
+<!--HEAD-------------------------------------------------------->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Connexion</title>
+    <meta name="author" content="Jessy Charlet">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./include/style.css">
+</head>
+<!-------------------------------------------------------------->
+
+<body>
+    <!--header-------------------------------------------------------->
+    <?php
+    include "./include/header.php";
+    ?>
+    <!--corps-------------------------------------------------------->
+    <main>
+        <section>
+            <h1>Connexion</h1>
+            <?php
+            // Messages (validation et erreur)
+            if ($error == true) {
+                echo $error_message;
+            }
+            if (isset($_SESSION['validation'])) {
+                echo "<span class='validation'>Félicitation pour
+            ton inscription</span>";
+                unset($_SESSION['validation']);
+            }
+            ?>
+            <!--formulaire-->
+            <form method='post' action='connexion.php'>
+                <input type='text' name='login' value='<?= $_SESSION['login'] ?>' placeholder='Identifiant'>
+                <input type='password' name='password' value='<?= $_SESSION['password'] ?>' placeholder='Mot de passe'>
+                <button class="button" type='submit' name='connexion'>Connexion</button>
+            </form>
+            <p>
+                Pas encore de compte ?<br>
+                <a class='bouton' href='inscription.php'>S'inscrire</a>
+            </p>
+        </section>
+    </main>
+    <!--footer-------------------------------------------------------->
+    <?php
+    include "./include/footer.php";
+    ?>
+</body>
