@@ -51,19 +51,11 @@ if (empty($_SESSION['login'])) {
 ?>
 
 
-<!--HEAD-------------------------------------------------------->
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8" />
-    <title>inscription</title>
-    <meta name="author" content="Jessy Charlet">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./include/style.css">
-</head>
-<!-------------------------------------------------------------->
+<!------------------------------------------------>
+<?php
+include "./include/head.php";
+?>
+<!------------------------------------------------>
 
 <body>
     <?php
@@ -91,3 +83,4 @@ if (empty($_SESSION['login'])) {
     include "./include/footer.php";
     ?>
 </body>
+</html>

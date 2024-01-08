@@ -14,13 +14,21 @@ h1 {
     text-align: center;
     color: #2f4956;
 }
-
+.validation{
+    padding: 1em 2em;
+    border: 1px solid green;
+    color: green;
+    background-color: #5fa559;
+    margin: 1em auto;
+    text-align: center;
+}
 
 
 /* Menu */
 
 .menu {
     display: flex;
+    width: 100%;
     background-color: white;
     padding: 2em 1em 1em 1em;
     justify-items: center;
@@ -136,20 +144,20 @@ article>p:last-child {
 .reservation {
     width: fit-content;
     margin: 5em auto;
-    padding: 2em 6em 0 6em;
+    padding: 2em 4em 0 4em;
     color: #462613;
     background-color: #d8753c;
     >h1 {
         color: #462613;
         text-transform: uppercase;
     }
-
+    
     >div {
         display: flex;
         justify-content: space-between;
         margin-top: 3em;
     }
-
+    
     >div>.rond {
         width: 50px;
         height: 25px;
@@ -172,8 +180,9 @@ article>p:last-child {
 
 .plan {
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: 0.5fr repeat(7, 1fr);
     width: 80vw;
+    height: 48em;
     margin: 0 auto;
     border: 20px solid white;
     border-radius: 30px;
@@ -196,32 +205,95 @@ article>p:last-child {
 .planjour {
     background-color: rgb(230, 230, 230);
 }
-
 .planheure {
     background-color: rgb(240, 240, 240);
+    text-align: right;
+    box-shadow: inset -1px 0 rgb(0, 0, 0, 0.5);
+}
+.planheure1{
+    height: 2em;
+    background-color: rgb(240, 240, 240);
+    text-align: right;
+    box-shadow: inset -1px 0 rgb(0, 0, 0, 0.5);
+    padding-right: 0.8em;
 }
 
 .plandate {
     background-color: white;
+    box-shadow: inset -1px 0 rgb(0, 0, 0, 0.1);
 }
 
 .planresa {
     background-color: #42a994;
-
+    box-shadow: inset 0 5px rgb(0, 0, 0, 0.2);
+    text-align: center;
+    transition: all 200ms;
+    
     >h2 {
         font-size: 1em;
         font-weight: 400;
-        margin: 0.5em;
+        margin: 0 auto;
+        background-color: rgb(255, 255, 255, 0.5);
+        width: fit-content;
+        padding: 0.2em 0.5em;
+        border-radius: 5px;
+        
     }
-
+    
     >span {
         font-size: 0.8em;
         font-style: italic;
-        text-align: right;
-        margin-right: 1em;
+        color: rgb(255, 255, 255, 0.5);
+        border: 1px dashed rgb(255, 255, 255, 0.5);
+        border-top: 0;
+        width:fit-content;
+        padding: 0 0.5em 0.2em 0.5em;
+        border-radius: 0 0 5px 5px;
+        margin: 0 auto;
     }
 }
-
+.planresa:hover {
+    opacity: 50%;
+}
+.planc2 {
+    background-color: #2f4956;
+    height: 8em;
+}
+.planc3 {
+    background-color: #d8753c;
+    height: 12em;
+}
+.planc4 {
+    background-color: #e93552;
+    height: 16em;
+}
+.planc5 {
+    background-color: #e93552;
+    height: 20em;
+}
+.planc6 {
+    background-color: #e93552;
+    height: 24em;
+}
+.planc7 {
+    background-color: #e93552;
+    height: 28em;
+}
+.planc8 {
+    background-color: #e93552;
+    height: 32em;
+}
+.planc9 {
+    background-color: #e93552;
+    height: 36em;
+}
+.planc10 {
+    background-color: #e93552;
+    height: 40em;
+}.planc11 {
+    background-color: #e93552;
+    height: 44em;
+}
 .planvide {
     background-color: rgb(220, 220, 220);
     color: rgb(200, 200, 200);
@@ -233,4 +305,7 @@ article>p:last-child {
 
 .linkplan {
     color: black;
+}
+.invisible{
+    display: none;
 }

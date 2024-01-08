@@ -9,9 +9,16 @@ if (isset($_SESSION['connexion'])) {
 } elseif (empty($_SESSION['connexion'])) {
     header("Location: ./connexion.php");
 }
+if (isset($_SESSION['val'])) {
+    $validation = $_SESSION['val'];
+    unset($_SESSION['val']);
+} else {
+    $validation = false;
+}
+$validation_message = "<span class='validation'>Votre résesrvation a été réalisée avec succès !</span>";
+
 
 $error = false;
-$validation = false;
 $lastday = new DateTime();
 $today = new DateTime();
 $ajoutsemaine = new DateInterval('P6D');
@@ -44,19 +51,11 @@ $mois = array(
 );
 ?>
 
-<!--HEAD-------------------------------------------------------->
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8" />
-    <title>Planning</title>
-    <meta name="author" content="Jessy Charlet">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./include/style.css">
-</head>
-<!-------------------------------------------------------------->
+<!------------------------------------------------>
+<?php
+include "./include/head.php";
+?>
+<!------------------------------------------------>
 
 <body>
 
@@ -66,21 +65,18 @@ $mois = array(
         ?>
         <main>
             <h1>
-                Réservations du
-                <?= $today->format('d M') ?> au
+                Réservations pour la semaine du
+                <?= $today->format('d') ?> au
                 <?php
-                echo $lastday->format('d M');
+                echo $lastday->format('d');
                 ?>
             </h1>
             <a href="reservation-form.php" class="btn_resa">Réserver un créneau</a>
             <?php
-            $m = intval($today->format('m'));
-            $y = intval($today->format('Y'));
-            $sem = array(6, 0, 1, 2, 3, 4, 5); // Correspondance des jours de la semaine : lundi = 0, dimanche = 6
-            $week = array('Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche');
+            if ($validation == true) {
+                echo $validation_message;
+            }
 
-            $t = mktime(12, 0, 0, $m, 1, $y); // Timestamp du premier jour du mois
-            
 
 
             // Requête SQL (selectionne toutes les infos de la table réservations)
@@ -93,41 +89,117 @@ $mois = array(
             ?>
             <div class="planjour">
                 <div class="plandate planc"></div>
-                <div class="planheure planc">8H / 9H</div>
-                <div class="planheure planc">10H / 11h</div>
-                <div class="planheure planc">11H / 12h</div>
-                <div class="planheure planc">12H / 13h</div>
-                <div class="planheure planc">13H / 14h</div>
-                <div class="planheure planc">14H / 15h</div>
-                <div class="planheure planc">15H / 16h</div>
-                <div class="planheure planc">16H / 17h</div>
-                <div class="planheure planc">17H / 18h</div>
-                <div class="planheure planc">18H / 19h</div>
+                <div class="planheure1 planc">8 h</div>
+                <div class="planheure planc">9 h -</div>
+                <div class="planheure planc">10 h -</div>
+                <div class="planheure planc">11 h -</div>
+                <div class="planheure planc">12 h -</div>
+                <div class="planheure planc">13 h -</div>
+                <div class="planheure planc">14 h -</div>
+                <div class="planheure planc">15 h -</div>
+                <div class="planheure planc">16 h -</div>
+                <div class="planheure planc">17 h -</div>
+                <div class="planheure planc">18 h -</div>
+                <div class="planheure1 planc">19 H</div>
             </div>
             <?php
             for ($i = 0; $i < 7; $i++) {
+                if ($today->format('D') == "Mon"){
+                    $day = "Lundi";
+                }
+                elseif ($today->format('D') == "Tue"){
+                    $day = "Mardi";
+                }
+                elseif ($today->format('D') == "Wed"){
+                    $day = "Mercredi";
+                }
+                elseif ($today->format('D') == "Thu"){
+                    $day = "Jeudi";
+                }
+                elseif ($today->format('D') == "Fri"){
+                    $day = "Vendredi";
+                }
+                elseif ($today->format('D') == "Sat"){
+                    $day = "Samedi";
+                }
+                elseif ($today->format('D') == "Sun"){
+                    $day = "Dimanche";
+                }
                 echo "<div class='planjour'>";
-                echo "<div class='plandate planc'>" . $today->format('D d') . "</div>";
-                for ($h = 9; $h < 19; $h++) {
+                echo "<div class='plandate planc'>".$day." ".$today->format('d') . "</div>";
+                $verif = 0;
+                $supcase = 0;
+                for ($h = 8; $h < 19; $h++) {
                     if ($today->format('D') == "Sat" or $today->format('D') == "Sun") {
                         echo "<div class='planweekend planc'></div>";
                     } else {
-                        $verif = 0;
                         foreach ($sql_resultat as $resa) {
                             $plannig_verif = false;
-                            $heure = $h . ":00:00";
+                            if ($h < 10){
+                                $heure = "0".$h . ":00:00";
+                            }
+                            else{
+                                $heure = $h . ":00:00";
+                            }
                             $resadate = explode(" ", $resa['debut']);
+                            $resadatefin = explode(" ", $resa['fin']);
                             if ($resadate[0] == $today->format('Y-m-d') and $resadate[1] == $heure) {
-                                echo "<a href='reservation.php?titre=".$resa['titre']."&debut=".$resa['debut']."&fin=".$resa['fin']."&login=".$resa['login']."&description=".$resa['description']."' class='linkplan'><div class='planresa planc'><h2>" . $resa['titre'] . "</h2>
+                                if (intval($resadatefin[1]) - intval($resadate[1]) == 1) {
+                                    $case = "planc";
+                                    $supcase = $supcase + 1;
+                                } elseif (intval($resadatefin[1]) - intval($resadate[1]) == 2) {
+                                    $case = "planc2";
+                                    $supcase = $supcase + 2;
+                                } elseif (intval($resadatefin[1]) - intval($resadate[1]) == 3) {
+                                    $case = "planc3";
+                                    $supcase = $supcase + 3;
+                                } elseif (intval($resadatefin[1]) - intval($resadate[1]) == 4) {
+                                    $case = "planc4";
+                                    $supcase = $supcase + 4;
+                                }
+                                elseif (intval($resadatefin[1]) - intval($resadate[1]) == 5) {
+                                    $case = "planc5";
+                                    $supcase = $supcase + 5;
+                                }
+                                elseif (intval($resadatefin[1]) - intval($resadate[1]) == 6) {
+                                    $case = "planc6";
+                                    $supcase = $supcase + 6;
+                                }
+                                elseif (intval($resadatefin[1]) - intval($resadate[1]) == 7) {
+                                    $case = "planc7";
+                                    $supcase = $supcase + 7;
+                                }
+                                elseif (intval($resadatefin[1]) - intval($resadate[1]) == 8) {
+                                    $case = "planc8";
+                                    $supcase = $supcase + 8;
+                                }
+                                elseif (intval($resadatefin[1]) - intval($resadate[1]) == 9) {
+                                    $case = "planc9";
+                                    $supcase = $supcase + 9;
+                                }
+                                elseif (intval($resadatefin[1]) - intval($resadate[1]) == 10) {
+                                    $case = "planc9";
+                                    $supcase = $supcase + 10;
+                                }
+                                elseif (intval($resadatefin[1]) - intval($resadate[1]) == 11) {
+                                    $case = "planc9";
+                                    $supcase = $supcase + 11;
+                                }
+                                
+                                echo "<a href='reservation.php?titre=" . $resa['titre'] . "&debut="
+                                    . $resa['debut'] . "&fin=" . $resa['fin'] . "&login=" . $resa['login'] . "&description="
+                                    . $resa['description'] . "' class='linkplan'><div class='planc planresa " . $case . "'><h2>"
+                                    . $resa['titre'] . "</h2>
                                 <span>" . $resa['login'] . "</span></div></a>";
-                                $verif = 1;
                                 break;
                             } else {
-
                             }
                         }
-                        if ($verif == 0) {
+                        if ($supcase == 0) {
                             echo "<div class='planvide planc'>Disponible</div>";
+                        }
+                        else {
+                            $supcase--;
                         }
                     }
                 }
@@ -141,3 +213,5 @@ $mois = array(
         include "./include/footer.php";
         ?>
     </body>
+
+    </html>

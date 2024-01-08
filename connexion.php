@@ -43,19 +43,11 @@ if (isset($_POST['connexion'])) {
 }
 ?>
 
-<!--HEAD-------------------------------------------------------->
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8" />
-    <title>Connexion</title>
-    <meta name="author" content="Jessy Charlet">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./include/style.css">
-</head>
-<!-------------------------------------------------------------->
+<!------------------------------------------------>
+<?php
+include "./include/head.php";
+?>
+<!------------------------------------------------>
 
 <body>
     <!--header-------------------------------------------------------->
@@ -94,3 +86,5 @@ if (isset($_POST['connexion'])) {
     include "./include/footer.php";
     ?>
 </body>
+
+</html>

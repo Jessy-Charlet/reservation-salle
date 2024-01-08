@@ -2,26 +2,18 @@
 session_start();
 ?>
 
-<!--HEAD-------------------------------------------------------->
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8" />
-    <title>Réservation</title>
-    <meta name="author" content="Jessy Charlet">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./include/style.css">
-</head>
-<!-------------------------------------------------------------->
+<!--Head---------------------------------------------->
+<?php
+include "./include/head.php";
+?>
+<!------------------------------------------------>
 
 <body>
-    <!--header-------------------------------------------------------->
+    <!--Header-------------------------------------------------------->
     <?php
     include "./include/header.php";
     ?>
-    <!--corps-------------------------------------------------------->
+    <!--Main-------------------------------------------------------->
     <main>
         <header class="header_index">
             <a href="reservation-form.php">Faire une réservation</a>
@@ -70,7 +62,7 @@ session_start();
             </article>
         </section>
     </main>
-    <!--footer-------------------------------------------------------->
+    <!--Footer-------------------------------------------------------->
     <?php
     include "./include/footer.php";
     ?>

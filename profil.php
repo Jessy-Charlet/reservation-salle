@@ -53,19 +53,11 @@ elseif (isset($_POST['update_password'])) {
 
 ?>
 
-<!--HEAD-------------------------------------------------------->
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8" />
-    <title>Profil</title>
-    <meta name="author" content="Jessy Charlet">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./include/style.css">
-</head>
-<!-------------------------------------------------------------->
+<!------------------------------------------------>
+<?php
+include "./include/head.php";
+?>
+<!------------------------------------------------>
 
 <body>
     <?php
@@ -137,3 +129,4 @@ elseif (isset($_POST['update_password'])) {
     include "./include/footer.php";
     ?>
 </body>
+</html>
