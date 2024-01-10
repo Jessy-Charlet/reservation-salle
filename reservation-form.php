@@ -22,27 +22,39 @@ if (isset($_POST['resa'])) {
     $sql = "SELECT * FROM reservations";
     // Exécution de la requête
     $sql_resultat = $sql_connexion->query($sql);
-    foreach ($sql_resultat as $reservation) {
-        $resadate = explode(" ", $reservation['debut']);
-        $postresadate = explode(" ", $_POST['debut']);
-        $resadatefin = explode(" ", $reservation['fin']);
-        $heure = substr($resadate, 0,1);
-        $postheure = substr($postresadate, 0,1);
-        $heurefin = substr($resadatefin, 0,1);
-        // Si la réservation existe déjà message d'erreur
-        if ($resadate["0"] == $postresadate["0"]) {
-            while(strval($heure)<=strval($heurefin["0"])){
-                if(strval($heure) == strval($postheure["0"])){
-                    $error = true;
-                    $error_message = "<span class='error'>Une réservation est déjà prise sur ces horraires
-                    <a href='planning.php'>Voir le planning</a></span>";
-                }
-                $heure++;
+
+    $pdate = date_create($_POST['date']);
+    if (date_format($pdate, "D") == "Sun" or date_format($pdate, "D") == "Sat") {
+        $error = true;
+        $bdd = false;
+        $error_message = "<span class='error'>Le Salon n'est pas disponnible le weekend.</span><br/>
+        <a href='planning.php'>Voir le planning</a>";
+    } else {
+        foreach ($sql_resultat as $reservation) {
+            $rdate = explode(" ", $reservation['debut']);
+            $postresadate = explode(" ", $_POST['debut']);
+            $resadatefin = explode(" ", $reservation['fin']);
+            /*$heure = substr($rdate, 0, 1);
+            $postheure = substr($postresadate, 0, 1);
+            $heurefin = substr($resadatefin, 0, 1);*/
+            // Si la réservation existe déjà message d'erreurS
+            if ($rdate['0'] == $_POST['date']) {
+                var_dump($error);
+                /* while (strval($heure) < strval($heurefin["0"])) {
+                     if (strval($heure) == strval($postheure["0"])) {
+                         $error = true;
+                         $error_message = "<span class='error'>Une réservation est déjà prise sur ces horraires.
+                         <a href='planning.php'>Voir le planning</a></span>";
+                     } else {
+                         $bdd = true;
+                     }
+                     $heure++;
+                 }*/
             }
-        }
-        // Sinon 
-        else {
-            $bdd = true;
+            // Sinon 
+            else {
+                $bdd = true;
+            }
         }
     }
 
@@ -62,7 +74,7 @@ if (isset($_POST['resa'])) {
         $sql_resultat = $sql_connexion->query($sql);
         // Retour sur le planning et message de validation
         $_SESSION['val'] = true;
-        //header("Location: ./planning.php");
+        header("Location: ./planning.php");
     }
 }
 ?>
@@ -78,19 +90,21 @@ include "./include/head.php";
     <?php
     include "./include/header.php";
     ?>
-
+    <title>[Le Salon] Salle de réunion haut de gamme - réserver un créneau</title>
+    <meta name="description" content="Formulaire de réservation de la salle de réunion hat de gamme Le Salon" />
+    </head>
 
 
     <!--corps-------------------------------------------------------->
     <main>
-        <section>
+        <section class="resa">
+            <div>.</div>
+            <div>
             <h1>Reservation</h1>
             <?php
             // Messages (validation et erreur)
             if ($error == true) {
                 echo $error_message;
-            } elseif ($validation == true) {
-                echo $validation_message;
             }
             if (isset($_SESSION['validation'])) {
                 echo "<span class='validation'>Félicitation pour
@@ -99,49 +113,45 @@ include "./include/head.php";
             }
             ?>
             <!--formulaire-->
-            <p>Utilisateur :
-                <?= $_SESSION['login'] ?>
+            <p>Effectuer une réservation au nom de <span class="gras"><?= $_SESSION['login'] ?></span>
             </p>
             <form method='post' action='reservation-form.php'>
                 <label for="titre">Titre :</label>
-                <input type='text' id="titre" name='titre' required placeholder='Titre'>
+                <input type='text' id="titre" name='titre' required placeholder="Nom de l'activitée">
                 <label for="date">Date :</label>
                 <input type="date" id="date" name="date" value="<?= $date->format('Y-m-d') ?>"
                     min="<?= $date->format('Y-m-d') ?>" max="<?php $date->add($ajoutsemaine);
                       echo $date->format('Y-m-d') ?>" />
                 <label for="debut">Heure de début :</label>
                 <select name="debut" id="debut">
-                    <option value="08:00:00">8H</option>
-                    <option value="09:00:00">9H</option>
-                    <option value="10:00:00">10H</option>
-                    <option value="11:00:00">11H</option>
-                    <option value="12:00:00">12H</option>
-                    <option value="13:00:00">13H</option>
-                    <option value="14:00:00">14H</option>
-                    <option value="15:00:00">15H</option>
-                    <option value="16:00:00">16H</option>
-                    <option value="17:00:00">17H</option>
-                    <option value="18:00:00">18H</option>
-                    <option value="19:00:00">19H</option>
+                    <?php
+                    for ($hd = 8; $hd <= 18; $hd++) {
+                        if ($hd < 10) {
+                            echo "<option value='0" . $hd . ":00:00'>" . $hd . "H</option>";
+                        } else {
+                            echo "<option value='" . $hd . ":00:00'>" . $hd . "H</option>";
+                        }
+                    }
+                    ?>
                 </select>
                 <label for="fin">Heure de fin :</label>
                 <select name="fin" id="fin">
-                    <option value="09:00:00">9H</option>
-                    <option value="10:00:00">10H</option>
-                    <option value="11:00:00">11H</option>
-                    <option value="12:00:00">12H</option>
-                    <option value="13:00:00">13H</option>
-                    <option value="14:00:00">14H</option>
-                    <option value="15:00:00">15H</option>
-                    <option value="16:00:00">16H</option>
-                    <option value="17:00:00">17H</option>
-                    <option value="18:00:00">18H</option>
-                    <option value="19:00:00">19H</option>
+                    <?php
+                    for ($hf = 9; $hf <= 19; $hf++) {
+                        if ($hf < 10) {
+                            echo "<option value='0" . $hf . ":00:00'>" . $hf . "H</option>";
+                        } else {
+                            echo "<option value='" . $hf . ":00:00'>" . $hf . "H</option>";
+                        }
+                    }
+                    ?>
+
                 </select>
                 <label for="description">Description :</label>
-                <textarea id="description" name="description" maxlength="40" required rows="2" cols="33"></textarea>
+                <textarea id="description" name="description" maxlength="40" required rows="3" cols="33" placeholder="Une courte description de l'activitée prévu dans [Le Salon]"></textarea>
                 <button class="button" type='submit' name='resa'>Reserver</button>
             </form>
+                </div>
         </section>
     </main>
     <!--footer-------------------------------------------------------->

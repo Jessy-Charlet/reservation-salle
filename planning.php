@@ -55,6 +55,9 @@ $mois = array(
 <?php
 include "./include/head.php";
 ?>
+    <title>[Le Salon] Salle de réunion haut de gamme - le planning</title>
+    <meta name="description" content="Planning de la salle de réunion hat de gamme Le Salon" />
+    </head>
 <!------------------------------------------------>
 
 <body>

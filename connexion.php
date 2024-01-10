@@ -47,6 +47,9 @@ if (isset($_POST['connexion'])) {
 <?php
 include "./include/head.php";
 ?>
+    <title>[Le Salon] Salle de réunion haut de gamme - connexion</title>
+    <meta name="description" content="Page de cnnexion de la salle de réunion haut de gamme Le Salon" />
+    </head>
 <!------------------------------------------------>
 
 <body>

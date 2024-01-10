@@ -55,6 +55,9 @@ if (empty($_SESSION['login'])) {
 <?php
 include "./include/head.php";
 ?>
+    <title>[Le Salon] Salle de réunion haut de gamme - inscription</title>
+    <meta name="description" content="Inscription à la salle de réunion hat de gamme Le Salon" />
+    </head>
 <!------------------------------------------------>
 
 <body>

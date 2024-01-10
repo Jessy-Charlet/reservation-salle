@@ -15,6 +15,9 @@ if (isset($_SESSION['connexion'])) {
 <?php
 include "./include/head.php";
 ?>
+    <title>[Le Salon] Salle de réunion haut de gamme - réservation</title>
+    <meta name="description" content="Réservation de la salle de réunion hat de gamme Le Salon" />
+    </head>
 <!------------------------------------------------>
 
 <body>

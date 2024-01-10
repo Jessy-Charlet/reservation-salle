@@ -13,6 +13,9 @@ include "./include/head.php";
     <?php
     include "./include/header.php";
     ?>
+    <title>[Le Salon] Salle de réunion haut de gamme</title>
+    <meta name="description" content="Présentation de la salle de réunion haut de gamme Le Salon" />
+    </head>
     <!--Main-------------------------------------------------------->
     <main>
         <header class="header_index">
