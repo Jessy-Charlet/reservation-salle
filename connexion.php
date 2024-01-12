@@ -59,7 +59,7 @@ include "./include/head.php";
     ?>
     <!--corps-------------------------------------------------------->
     <main>
-        <section>
+        <section class="co">
             <h1>Connexion</h1>
             <?php
             // Messages (validation et erreur)

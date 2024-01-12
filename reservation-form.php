@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "./include/sql.php";
+
 // Vérification de l'état de connexion du client
 if (isset($_SESSION['connexion'])) {
     if (($_SESSION['connexion'] == false)) {
@@ -13,6 +14,7 @@ if (isset($_SESSION['connexion'])) {
 // Mise en place des variables
 $error = false;
 $validation = false;
+$bdd = true;
 $date = new DateTime();
 $ajoutsemaine = new DateInterval('P6D');
 
@@ -22,38 +24,41 @@ if (isset($_POST['resa'])) {
     $sql = "SELECT * FROM reservations";
     // Exécution de la requête
     $sql_resultat = $sql_connexion->query($sql);
-
+    // Si la réservation est un samedi ou dimanche -> STOP + erreur
     $pdate = date_create($_POST['date']);
     if (date_format($pdate, "D") == "Sun" or date_format($pdate, "D") == "Sat") {
         $error = true;
         $bdd = false;
+        $bdd = false;
         $error_message = "<span class='error'>Le Salon n'est pas disponnible le weekend.</span><br/>
         <a href='planning.php'>Voir le planning</a>";
-    } else {
+    }
+    // Si la réservation fini avant le début -> STOP + erreur
+    elseif (intval(substr($_POST['debut'], 0, 2)) >= intval(substr($_POST['fin'], 0, 2))) {
+        $error = true;
+        $bdd = false;
+        $bdd = false;
+        $error_message = "<span class='error'>L'heure de fin doit être ultérrieur à l'heure de début</span>";
+    }
+    // Si la réservation existe déjà ou empiète sur une autre réservation message d'erreur
+    else {
         foreach ($sql_resultat as $reservation) {
             $rdate = explode(" ", $reservation['debut']);
-            $postresadate = explode(" ", $_POST['debut']);
+            $postresadate = explode(":", $_POST['debut']);
+            $postresadatefin = explode(":", $_POST['fin']);
             $resadatefin = explode(" ", $reservation['fin']);
-            /*$heure = substr($rdate, 0, 1);
-            $postheure = substr($postresadate, 0, 1);
-            $heurefin = substr($resadatefin, 0, 1);*/
-            // Si la réservation existe déjà message d'erreurS
-            if ($rdate['0'] == $_POST['date']) {
-                var_dump($error);
-                /* while (strval($heure) < strval($heurefin["0"])) {
-                     if (strval($heure) == strval($postheure["0"])) {
-                         $error = true;
-                         $error_message = "<span class='error'>Une réservation est déjà prise sur ces horraires.
-                         <a href='planning.php'>Voir le planning</a></span>";
-                     } else {
-                         $bdd = true;
-                     }
-                     $heure++;
-                 }*/
-            }
-            // Sinon 
-            else {
-                $bdd = true;
+            $hd = intval(substr($rdate['1'], 0, 2));
+            $pd = intval(substr($postresadate['0'], 0, 2));
+            $pf = intval(substr($postresadatefin['0'], 0, 2));
+            $hf = intval(substr($resadatefin['1'], 0, 2));
+            if ($rdate['0'] == ($_POST['date'])) {
+                if($pd >= $hd && $pd < $hf OR $pf > $hd && $pf <= $hf OR $hd >= $pd && $hd < $pf OR $hf > $pd && $hf <= $pf){
+                    $error = true;
+                    $bdd = false;
+                    $error_message = "<span class='error'>Une réservation est déjà prise sur ces horraires.</span>
+                     <a href='planning.php'>Voir le planning</a>";
+                    break;
+                } 
             }
         }
     }
@@ -79,7 +84,7 @@ if (isset($_POST['resa'])) {
 }
 ?>
 
-<!------------------------------------------------>
+<!--Head---------------------------------------------->
 <?php
 include "./include/head.php";
 ?>
@@ -100,58 +105,56 @@ include "./include/head.php";
         <section class="resa">
             <div>.</div>
             <div>
-            <h1>Reservation</h1>
-            <?php
-            // Messages (validation et erreur)
-            if ($error == true) {
-                echo $error_message;
-            }
-            if (isset($_SESSION['validation'])) {
-                echo "<span class='validation'>Félicitation pour
-            ton inscription</span>";
-                unset($_SESSION['validation']);
-            }
-            ?>
-            <!--formulaire-->
-            <p>Effectuer une réservation au nom de <span class="gras"><?= $_SESSION['login'] ?></span>
-            </p>
-            <form method='post' action='reservation-form.php'>
-                <label for="titre">Titre :</label>
-                <input type='text' id="titre" name='titre' required placeholder="Nom de l'activitée">
-                <label for="date">Date :</label>
-                <input type="date" id="date" name="date" value="<?= $date->format('Y-m-d') ?>"
-                    min="<?= $date->format('Y-m-d') ?>" max="<?php $date->add($ajoutsemaine);
-                      echo $date->format('Y-m-d') ?>" />
-                <label for="debut">Heure de début :</label>
-                <select name="debut" id="debut">
-                    <?php
-                    for ($hd = 8; $hd <= 18; $hd++) {
-                        if ($hd < 10) {
-                            echo "<option value='0" . $hd . ":00:00'>" . $hd . "H</option>";
-                        } else {
-                            echo "<option value='" . $hd . ":00:00'>" . $hd . "H</option>";
+                <h1>Reservation</h1>
+                <?php
+                // Messages (validation et erreur)
+                if ($error == true) {
+                    echo $error_message;
+                }
+                ?>
+                <!--formulaire-->
+                <p>Effectuer une réservation au nom de <span class="gras">
+                        <?= $_SESSION['login'] ?>
+                    </span>
+                </p>
+                <form method='post' action='reservation-form.php'>
+                    <label for="titre">Titre :</label>
+                    <input type='text' id="titre" name='titre' required placeholder="Nom de l'activitée">
+                    <label for="date">Date :</label>
+                    <input type="date" id="date" name="date" value="<?= $date->format('Y-m-d') ?>"
+                        min="<?= $date->format('Y-m-d') ?>" max="<?php $date->add($ajoutsemaine);
+                          echo $date->format('Y-m-d') ?>" />
+                    <label for="debut">Heure de début :</label>
+                    <select name="debut" id="debut">
+                        <?php
+                        for ($hd = 8; $hd <= 18; $hd++) {
+                            if ($hd < 10) {
+                                echo "<option value='0" . $hd . ":00:00'>" . $hd . "H</option>";
+                            } else {
+                                echo "<option value='" . $hd . ":00:00'>" . $hd . "H</option>";
+                            }
                         }
-                    }
-                    ?>
-                </select>
-                <label for="fin">Heure de fin :</label>
-                <select name="fin" id="fin">
-                    <?php
-                    for ($hf = 9; $hf <= 19; $hf++) {
-                        if ($hf < 10) {
-                            echo "<option value='0" . $hf . ":00:00'>" . $hf . "H</option>";
-                        } else {
-                            echo "<option value='" . $hf . ":00:00'>" . $hf . "H</option>";
+                        ?>
+                    </select>
+                    <label for="fin">Heure de fin :</label>
+                    <select name="fin" id="fin">
+                        <?php
+                        for ($hf = 9; $hf <= 19; $hf++) {
+                            if ($hf < 10) {
+                                echo "<option value='0" . $hf . ":00:00'>" . $hf . "H</option>";
+                            } else {
+                                echo "<option value='" . $hf . ":00:00'>" . $hf . "H</option>";
+                            }
                         }
-                    }
-                    ?>
+                        ?>
 
-                </select>
-                <label for="description">Description :</label>
-                <textarea id="description" name="description" maxlength="40" required rows="3" cols="33" placeholder="Une courte description de l'activitée prévu dans [Le Salon]"></textarea>
-                <button class="button" type='submit' name='resa'>Reserver</button>
-            </form>
-                </div>
+                    </select>
+                    <label for="description">Description :</label>
+                    <textarea id="description" name="description" maxlength="40" required rows="3" cols="33"
+                        placeholder="Une courte description de l'activitée prévu dans [Le Salon]"></textarea>
+                    <button class="button" type='submit' name='resa'>Reserver</button>
+                </form>
+            </div>
         </section>
     </main>
     <!--footer-------------------------------------------------------->

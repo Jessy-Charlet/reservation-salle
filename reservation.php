@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+// Vérification de l'état de connexion du client
 if (isset($_SESSION['connexion'])) {
     if (($_SESSION['connexion'] == false)) {
         header("Location: ./connexion.php");
@@ -11,7 +12,7 @@ if (isset($_SESSION['connexion'])) {
 
 
 ?>
-<!------------------------------------------------>
+<!--Head---------------------------------------------->
 <?php
 include "./include/head.php";
 ?>
@@ -21,9 +22,15 @@ include "./include/head.php";
 <!------------------------------------------------>
 
 <body>
+    
+    <!--Header-------------------------------------------------------->
+
     <?php
     include "./include/header.php";
     ?>
+    
+    <!--Main-------------------------------------------------------->
+
     <main>
         <section class="reservation">
             <h1>
@@ -46,6 +53,9 @@ include "./include/head.php";
             </div>
         </section>
     </main>
+    
+    <!--Footer-------------------------------------------------------->
+
     <?php
     include "./include/footer.php";
     ?>

@@ -2,6 +2,7 @@
 session_start();
 include "./include/sql.php";
 
+// Vérification de l'état de connexion du client
 if (isset($_SESSION['connexion'])) {
     if (($_SESSION['connexion'] == false)) {
         header("Location: ./connexion.php");
@@ -9,6 +10,8 @@ if (isset($_SESSION['connexion'])) {
 } elseif (empty($_SESSION['connexion'])) {
     header("Location: ./connexion.php");
 }
+
+// Vérification du message de validation
 if (isset($_SESSION['val'])) {
     $validation = $_SESSION['val'];
     unset($_SESSION['val']);
@@ -17,7 +20,7 @@ if (isset($_SESSION['val'])) {
 }
 $validation_message = "<span class='validation'>Votre résesrvation a été réalisée avec succès !</span>";
 
-
+// Mise en place des variables
 $error = false;
 $lastday = new DateTime();
 $today = new DateTime();
@@ -26,32 +29,10 @@ $ajoutunjour = new DateInterval('P1D');
 $lastday->add($ajoutsemaine);
 
 $jour = getdate();
-$semaine = array(
-    " Dimanche ",
-    " Lundi ",
-    " Mardi ",
-    " Mercredi ",
-    " Jeudi ",
-    " vendredi ",
-    " samedi "
-);
-$mois = array(
-    1 => " janvier ",
-    " février ",
-    " mars ",
-    " avril ",
-    " mai ",
-    " juin ",
-    " juillet ",
-    " août ",
-    " septembre ",
-    " octobre ",
-    " novembre ",
-    " décembre "
-);
+
 ?>
 
-<!------------------------------------------------>
+<!--Head---------------------------------------------->
 <?php
 include "./include/head.php";
 ?>
@@ -60,12 +41,13 @@ include "./include/head.php";
     </head>
 <!------------------------------------------------>
 
-<body>
-
     <body>
+        <!--Head---------------------------------------------->
         <?php
         include "./include/header.php";
         ?>
+
+        <!--Main---------------------------------------------->
         <main>
             <h1>
                 Réservations pour la semaine du
@@ -106,6 +88,7 @@ include "./include/head.php";
                 <div class="planheure1 planc">19 H</div>
             </div>
             <?php
+
             for ($i = 0; $i < 7; $i++) {
                 if ($today->format('D') == "Mon"){
                     $day = "Lundi";
@@ -212,6 +195,8 @@ include "./include/head.php";
             echo "</div>";
             ?>
         </main>
+
+        <!--Footer---------------------------------------------->
         <?php
         include "./include/footer.php";
         ?>

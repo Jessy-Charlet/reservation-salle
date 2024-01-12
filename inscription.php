@@ -55,16 +55,16 @@ if (empty($_SESSION['login'])) {
 <?php
 include "./include/head.php";
 ?>
-    <title>[Le Salon] Salle de réunion haut de gamme - inscription</title>
-    <meta name="description" content="Inscription à la salle de réunion hat de gamme Le Salon" />
-    </head>
+<title>[Le Salon] Salle de réunion haut de gamme - inscription</title>
+<meta name="description" content="Inscription à la salle de réunion hat de gamme Le Salon" />
+</head>
 <!------------------------------------------------>
 
 <body>
     <?php
     include "./include/header.php";
     ?>
-    <section>
+    <section class="co">
         <h1>Inscription</h1>
         <?php
         // Messages d'erreure
@@ -86,4 +86,5 @@ include "./include/head.php";
     include "./include/footer.php";
     ?>
 </body>
+
 </html>
