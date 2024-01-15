@@ -741,3 +741,12 @@ article>p:last-child {
 .invisible {
     display: none;
 }
+
+/*--Footer-------------------------------------------------------------------------------------*/
+ footer {
+    background-color: #2f4956;
+    color: white;
+    padding: 2em 10em;
+    text-align: right;
+    margin-top: 5em;
+ }
